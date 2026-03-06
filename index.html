@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyElocution — Speak with a Neutral Accent in 30 Days</title>
+<meta name="description" content="AI-powered accent training for professionals. Real-time voice feedback. Hear yourself improve after every session.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--black:#0A0A0A;--ink:#1A1A1A;--mid:#6B6B6B;--border:#E0DDD8;--paper:#F7F5F2;--white:#FFFFFF;--teal:#2D8C7E;--teal-lt:#3DAFA0;--gold:#C9A84C;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{font-family:'Raleway',sans-serif;background:var(--white);color:var(--black);overflow-x:hidden;cursor:none;}
+.cursor{position:fixed;width:10px;height:10px;background:var(--black);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(10,10,10,0.2);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);}
+#scrollBar{position:fixed;top:0;left:0;height:2px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;pointer-events:none;}
+
+/* ANNOUNCEMENT */
+.ann-bar{background:var(--black);color:var(--white);text-align:center;padding:10px 6%;font-size:12px;font-weight:500;letter-spacing:0.06em;position:relative;}
+.ann-bar a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,168,76,0.4);}
+.ann-close{position:absolute;right:20px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;cursor:none;line-height:1;padding:4px 8px;}
+.ann-close:hover{color:white;}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;padding:0 6%;display:flex;align-items:center;justify-content:space-between;height:68px;background:rgba(255,255,255,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.nav-mic{width:22px;height:28px;}
+.nav-logo-text{font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:var(--black);letter-spacing:-0.3px;line-height:1;}
+.nav-logo-sub{font-size:8px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);display:block;margin-top:3px;}
+.nav-links{display:flex;align-items:center;gap:36px;list-style:none;}
+.nav-links a{font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--mid);text-decoration:none;transition:color 0.2s;cursor:none;}
+.nav-links a:hover{color:var(--black);}
+.nav-cta{background:var(--black)!important;color:var(--white)!important;padding:10px 22px;transition:background 0.2s!important;}
+.nav-cta:hover{background:var(--teal)!important;}
+.hamburger{display:none;flex-direction:column;gap:6px;cursor:none;background:none;border:none;padding:4px;}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--black);transition:all 0.3s;}
+.hamburger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg);}
+.mobile-nav{display:none;position:fixed;inset:0;z-index:99;background:var(--white);padding:100px 6% 40px;flex-direction:column;gap:40px;}
+.mobile-nav.open{display:flex;}
+.mobile-nav a{font-family:'Playfair Display',serif;font-size:38px;font-weight:400;color:var(--black);text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:24px;transition:color 0.2s;}
+.mobile-nav a:hover{color:var(--teal);}
+
+/* HERO */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:0 6%;gap:60px;}
+.hero-left{padding:80px 0;}
+.eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:32px;opacity:0;transform:translateY(20px);animation:fadeUp 0.7s ease forwards;}
+.eyebrow-line{width:32px;height:1px;background:var(--mid);}
+.eyebrow-text{font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--mid);}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(48px,5.5vw,80px);font-weight:400;line-height:1.06;letter-spacing:-2px;opacity:0;transform:translateY(20px);animation:fadeUp 0.7s 0.1s ease forwards;}
+.hero h1 em{font-style:italic;}
+.hero-body{font-size:16px;color:var(--mid);font-weight:300;line-height:1.8;max-width:400px;margin-top:28px;opacity:0;transform:translateY(20px);animation:fadeUp 0.7s 0.2s ease forwards;}
+.hero-actions{display:flex;align-items:center;gap:20px;margin-top:48px;flex-wrap:wrap;opacity:0;transform:translateY(20px);animation:fadeUp 0.7s 0.3s ease forwards;}
+.btn-primary{background:var(--black);color:var(--white);padding:16px 36px;font-family:'Raleway',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none;border:none;cursor:none;display:inline-block;transition:all 0.3s;}
+.btn-primary:hover{background:var(--teal);letter-spacing:0.26em;}
+.btn-audio{display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);background:none;border:none;cursor:none;padding:0;transition:color 0.2s;}
+.btn-audio:hover{color:var(--black);}
+.audio-icon{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;transition:all 0.2s;flex-shrink:0;}
+.btn-audio:hover .audio-icon{border-color:var(--black);background:var(--paper);}
+.btn-audio.playing .audio-icon{background:var(--black);border-color:var(--black);color:white;}
+.hero-stats{display:flex;gap:40px;margin-top:56px;padding-top:32px;border-top:1px solid var(--border);opacity:0;transform:translateY(20px);animation:fadeUp 0.7s 0.4s ease forwards;flex-wrap:wrap;}
+.stat strong{font-family:'Playfair Display',serif;font-size:30px;font-weight:400;display:block;line-height:1;}
+.stat span{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-top:4px;display:block;}
+.hero-right{display:flex;align-items:center;justify-content:center;height:100%;position:relative;opacity:0;animation:fadeIn 1s 0.4s ease forwards;}
+.mic-frame{position:relative;width:320px;height:440px;background:var(--paper);display:flex;align-items:center;justify-content:center;}
+.hero-mic{width:140px;opacity:0.9;animation:floatMic 5s ease-in-out infinite;}
+@keyframes floatMic{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.card-score{position:absolute;top:24px;right:-16px;background:var(--black);color:var(--white);padding:14px 20px;}
+.card-score strong{font-family:'Playfair Display',serif;font-size:28px;font-weight:400;display:block;line-height:1;}
+.card-score small{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;opacity:0.5;margin-top:3px;display:block;}
+.card-wave{position:absolute;bottom:-20px;left:-24px;background:var(--white);border:1px solid var(--border);padding:18px 20px;width:210px;box-shadow:0 8px 24px rgba(0,0,0,0.05);}
+.wave-label{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--mid);margin-bottom:10px;}
+.wave-score{font-family:'Playfair Display',serif;font-size:20px;font-weight:400;margin-top:10px;}
+.wave-score small{font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid);margin-left:4px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* DIVIDER / LOGOS */
+.divider{border:none;border-top:1px solid var(--border);margin:0 6%;}
+.logos-bar{padding:36px 6%;display:flex;align-items:center;gap:40px;flex-wrap:wrap;}
+.logos-label{font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--mid);white-space:nowrap;}
+.logos-list{display:flex;gap:36px;flex-wrap:wrap;align-items:center;}
+.logos-list span{font-family:'Playfair Display',serif;font-size:16px;color:rgba(10,10,10,0.18);letter-spacing:1px;transition:color 0.25s;cursor:none;}
+.logos-list span:hover{color:rgba(10,10,10,0.5);}
+
+/* AUDIO DEMO */
+.audio-section{background:var(--black);color:var(--white);padding:80px 6%;}
+.audio-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.audio-left .sec-eyebrow .eyebrow-line{background:rgba(255,255,255,0.2);}
+.audio-left .sec-eyebrow .eyebrow-text{color:rgba(255,255,255,0.4);}
+.audio-left .sec-title{color:var(--white);max-width:400px;}
+.audio-left .sec-title em{color:var(--gold);}
+.audio-sub{font-size:14px;color:rgba(255,255,255,0.5);font-weight:300;line-height:1.8;margin-top:16px;max-width:360px;}
+.audio-note{font-size:11px;color:rgba(255,255,255,0.22);margin-top:24px;font-style:italic;line-height:1.6;}
+.audio-right{display:flex;flex-direction:column;gap:14px;}
+.audio-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);padding:24px 28px;transition:all 0.25s;position:relative;overflow:hidden;}
+.audio-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
+.before-card::before{background:rgba(255,255,255,0.15);}
+.after-card::before{background:var(--teal);}
+.ac-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.ac-label{font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;}
+.ac-label.before{color:rgba(255,255,255,0.3);}
+.ac-label.after{color:var(--teal-lt);}
+.ac-score{font-family:'Playfair Display',serif;font-size:24px;color:white;}
+.ac-score.dim{opacity:0.25;}
+.ac-score.bright{color:var(--teal-lt);}
+.ac-phrase{font-family:'Playfair Display',serif;font-size:16px;font-style:italic;color:rgba(255,255,255,0.65);margin-bottom:14px;line-height:1.4;}
+.ac-waveform{height:36px;display:flex;align-items:center;gap:1.5px;margin-bottom:14px;}
+.ac-bar{width:3px;border-radius:2px;background:rgba(255,255,255,0.12);flex-shrink:0;transition:background 0.1s;}
+.after-card .ac-bar{background:rgba(61,175,160,0.25);}
+.ac-bar.active{background:rgba(255,255,255,0.7)!important;}
+.after-card .ac-bar.active{background:var(--teal-lt)!important;}
+.ac-play{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;background:none;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.45);padding:9px 18px;cursor:none;transition:all 0.2s;}
+.after-card .ac-play{border-color:rgba(61,175,160,0.3);color:var(--teal-lt);}
+.ac-play:hover{border-color:rgba(255,255,255,0.4);color:white;}
+.after-card .ac-play:hover{border-color:var(--teal-lt);background:rgba(61,175,160,0.08);}
+.stop-sq{display:none;}
+.ac-play.speaking .play-tri{display:none;}
+.ac-play.speaking .stop-sq{display:inline;}
+
+/* SECTIONS */
+section{padding:96px 6%;}
+.sec-eyebrow{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(36px,4vw,56px);font-weight:400;line-height:1.1;letter-spacing:-1px;color:var(--black);max-width:640px;}
+.sec-title em{font-style:italic;}
+
+/* HOW IT WORKS */
+.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:100px;align-items:start;margin-top:72px;}
+.how-body{font-size:15px;color:var(--mid);font-weight:300;line-height:1.8;max-width:360px;margin:20px 0 36px;}
+.steps{display:flex;flex-direction:column;}
+.step{display:grid;grid-template-columns:52px 1fr;gap:20px;padding:32px 0;border-bottom:1px solid var(--border);transition:padding-left 0.3s;cursor:none;}
+.step:first-child{border-top:1px solid var(--border);}
+.step:hover{padding-left:10px;}
+.step-num{font-family:'Playfair Display',serif;font-size:13px;color:var(--mid);padding-top:3px;}
+.step-title{font-family:'Playfair Display',serif;font-size:21px;font-weight:500;margin-bottom:8px;}
+.step-body{font-size:14px;color:var(--mid);font-weight:300;line-height:1.75;}
+
+/* LESSON PREVIEW */
+.preview-section{background:var(--paper);}
+.preview-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:64px;}
+.preview-copy p{font-size:15px;color:var(--mid);font-weight:300;line-height:1.8;margin:20px 0 28px;}
+.preview-tags{display:flex;flex-wrap:wrap;gap:8px;}
+.ptag{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;border:1px solid var(--border);padding:6px 14px;color:var(--mid);background:var(--white);}
+.lesson-mockup{background:var(--white);border:1px solid var(--border);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.07);}
+.lm-bar{background:var(--black);padding:10px 16px;display:flex;align-items:center;gap:8px;}
+.lm-dot{width:10px;height:10px;border-radius:50%;}
+.lm-body{padding:28px;}
+.lm-phrase-label{font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--mid);margin-bottom:10px;}
+.lm-phrase{font-family:'Playfair Display',serif;font-size:20px;font-weight:400;line-height:1.3;margin-bottom:22px;}
+.lm-phrase em{font-style:italic;border-bottom:2px solid var(--teal);padding-bottom:1px;}
+.lm-buttons{display:flex;gap:10px;margin-bottom:22px;}
+.lm-btn{flex:1;padding:12px;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;border:none;cursor:none;transition:all 0.2s;font-family:'Raleway',sans-serif;}
+.lm-btn-listen{background:var(--black);color:var(--white);}
+.lm-btn-rec{background:transparent;border:1px solid var(--border);color:var(--mid);}
+.lm-btn-rec.recording{background:#FEF2F2;border-color:#FCA5A5;color:#DC2626;}
+.lm-feedback{background:var(--paper);border:1px solid var(--border);padding:16px;margin-bottom:16px;}
+.lm-fb-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.lm-fb-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);}
+.lm-score-big{font-family:'Playfair Display',serif;font-size:30px;font-weight:400;line-height:1;}
+.lm-score-big span{font-size:12px;font-weight:600;color:var(--teal);margin-left:6px;}
+.lm-bar-track{height:3px;background:var(--border);margin-bottom:10px;}
+.lm-bar-fill{height:100%;background:var(--teal);transition:width 1.2s ease;}
+.lm-note{font-size:12px;color:var(--mid);font-weight:300;line-height:1.5;}
+.lm-note strong{color:var(--black);font-weight:600;}
+.lm-progress-row{display:flex;justify-content:space-between;align-items:center;margin-top:16px;}
+.lm-prog-label{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--mid);}
+.lm-prog-dots{display:flex;gap:5px;}
+.lm-prog-dot{width:8px;height:8px;border-radius:50%;background:var(--border);}
+.lm-prog-dot.done{background:var(--black);}
+.lm-prog-dot.current{background:var(--teal);}
+
+/* ACCENTS */
+.accents-bg{background:var(--paper);}
+.accent-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:64px;}
+.accent-list{display:flex;flex-direction:column;gap:2px;}
+.accent-item{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:var(--white);border:1px solid transparent;cursor:none;transition:all 0.22s;}
+.accent-item:hover,.accent-item.active{border-color:var(--black);}
+.accent-left{display:flex;align-items:center;gap:14px;}
+.accent-flag{font-size:22px;}
+.accent-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:400;}
+.accent-sub{font-size:12px;color:var(--mid);margin-top:2px;}
+.accent-tag{font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:4px 10px;border:1px solid var(--black);color:var(--black);}
+.accent-tag.soft{border-color:var(--border);color:var(--mid);}
+.prog-panel{background:var(--white);border:1px solid var(--border);padding:36px;}
+.prog-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border);}
+.prog-header h3{font-family:'Playfair Display',serif;font-size:20px;font-weight:400;}
+.prog-header span{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--mid);}
+.prog-row{margin-bottom:24px;}
+.prog-meta{display:flex;justify-content:space-between;margin-bottom:8px;}
+.prog-meta strong{font-size:12px;font-weight:600;letter-spacing:0.04em;}
+.prog-meta span{font-family:'Playfair Display',serif;font-size:16px;font-weight:400;}
+.prog-track{height:2px;background:var(--border);}
+.prog-fill{height:100%;background:var(--black);transition:width 1.8s ease;}
+
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);margin-top:64px;}
+.feat{padding:36px 32px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);transition:background 0.25s;cursor:none;}
+.feat:hover{background:var(--paper);}
+.feat:nth-child(3n){border-right:none;}
+.feat:nth-child(4),.feat:nth-child(5),.feat:nth-child(6){border-bottom:none;}
+.feat-icon{font-size:28px;margin-bottom:20px;display:block;opacity:0.8;}
+.feat-title{font-family:'Playfair Display',serif;font-size:19px;font-weight:400;margin-bottom:10px;}
+.feat-body{font-size:13px;color:var(--mid);font-weight:300;line-height:1.75;}
+
+/* FOUNDER */
+.founder-section{background:var(--black);color:var(--white);padding:96px 6%;}
+.founder-inner{display:grid;grid-template-columns:220px 1fr;gap:80px;align-items:center;max-width:960px;}
+.founder-avatar{width:180px;height:180px;background:linear-gradient(135deg,#2D8C7E 0%,#1B2A6B 100%);display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0;}
+.founder-avatar-letter{font-family:'Playfair Display',serif;font-size:72px;font-weight:400;color:rgba(255,255,255,0.9);}
+.founder-avatar-badge{position:absolute;bottom:-10px;right:-10px;background:var(--white);color:var(--black);font-size:9px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;padding:6px 10px;}
+.founder-label{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:16px;}
+.founder-quote{font-family:'Playfair Display',serif;font-size:clamp(18px,2.2vw,26px);font-style:italic;font-weight:400;line-height:1.55;color:var(--white);margin-bottom:28px;}
+.founder-name{font-size:14px;font-weight:400;color:rgba(255,255,255,0.5);}
+.founder-name strong{color:var(--white);display:block;font-size:15px;font-weight:600;margin-bottom:3px;}
+
+/* TESTIMONIALS */
+.testi-bg{background:var(--paper);}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:64px;}
+.testi{background:var(--white);padding:32px;border:1px solid var(--border);}
+.testi-score-bar{background:rgba(10,10,10,0.03);border:1px solid var(--border);padding:14px 16px;margin-bottom:20px;}
+.tsb-label{display:flex;justify-content:space-between;align-items:baseline;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--mid);margin-bottom:10px;}
+.tsb-delta{color:var(--teal);}
+.tsb-track{position:relative;height:28px;margin-bottom:8px;}
+.tsb-before,.tsb-after{position:absolute;left:0;height:10px;display:flex;align-items:center;justify-content:flex-end;font-size:9px;font-weight:700;padding-right:6px;}
+.tsb-before{top:0;background:rgba(10,10,10,0.1);color:var(--mid);}
+.tsb-after{top:14px;background:linear-gradient(90deg,var(--teal),#4A90D9);color:white;}
+.tsb-legend{font-size:9px;color:var(--mid);letter-spacing:0.06em;}
+.dot-before{color:rgba(10,10,10,0.25);}
+.dot-after{color:var(--teal);}
+.testi-author svg{border-radius:50%;flex-shrink:0;}
+.q-mark{font-family:'Playfair Display',serif;font-size:60px;line-height:0.5;color:var(--border);display:block;margin-bottom:18px;}
+.testi-text{font-family:'Playfair Display',serif;font-size:15px;font-style:italic;line-height:1.7;color:var(--black);margin-bottom:24px;}
+.testi-author{display:flex;align-items:center;gap:12px;padding-top:20px;border-top:1px solid var(--border);}
+.auth-name{font-size:13px;font-weight:600;}
+.auth-detail{font-size:11px;color:var(--mid);margin-top:2px;}
+
+/* PRICING */
+.price-toggle{display:flex;align-items:center;gap:3px;margin-top:36px;}
+.toggle-btn{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:9px 20px;border:1px solid var(--border);background:transparent;color:var(--mid);cursor:none;transition:all 0.2s;}
+.toggle-btn.on{background:var(--black);color:var(--white);border-color:var(--black);}
+.save-note{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);margin-left:14px;}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);margin-top:48px;}
+.plan{padding:44px 32px;border-right:1px solid var(--border);transition:background 0.25s;position:relative;}
+.plan:last-child{border-right:none;}
+.plan.featured{background:var(--black);}
+.plan:not(.featured):hover{background:var(--paper);}
+.plan-badge{font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.6);padding:4px 10px;display:inline-block;margin-bottom:20px;}
+.plan-name{font-family:'Playfair Display',serif;font-size:26px;font-weight:400;margin-bottom:8px;color:var(--black);}
+.plan.featured .plan-name{color:var(--white);}
+.plan-desc{font-size:13px;color:var(--mid);font-weight:300;line-height:1.65;margin-bottom:28px;min-height:48px;}
+.plan.featured .plan-desc{color:rgba(255,255,255,0.45);}
+.plan-price{display:flex;align-items:baseline;gap:3px;margin-bottom:32px;padding-bottom:28px;border-bottom:1px solid var(--border);}
+.plan.featured .plan-price{border-color:rgba(255,255,255,0.1);}
+.p-sym{font-family:'Playfair Display',serif;font-size:22px;font-weight:400;color:var(--black);}
+.plan.featured .p-sym{color:var(--white);}
+.p-num{font-family:'Playfair Display',serif;font-size:56px;font-weight:400;line-height:1;color:var(--black);}
+.plan.featured .p-num{color:var(--white);}
+.p-per{font-size:12px;color:var(--mid);}
+.plan.featured .p-per{color:rgba(255,255,255,0.4);}
+.plan-feats{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:36px;}
+.plan-feats li{display:flex;gap:10px;font-size:13px;color:var(--ink);font-weight:400;align-items:flex-start;line-height:1.4;}
+.plan.featured .plan-feats li{color:rgba(255,255,255,0.75);}
+.plan-feats li::before{content:'–';color:var(--mid);flex-shrink:0;}
+.plan.featured .plan-feats li::before{color:rgba(255,255,255,0.3);}
+.btn-plan{display:block;width:100%;padding:14px;text-align:center;font-family:'Raleway',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;text-decoration:none;border:none;cursor:none;transition:all 0.25s;}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--black);}
+.btn-outline:hover{border-color:var(--black);background:var(--paper);}
+.btn-white{background:var(--white);color:var(--black);}
+.btn-white:hover{background:var(--paper);}
+.trial-note{font-size:11px;color:var(--mid);margin-top:12px;text-align:center;line-height:1.55;}
+.plan.featured .trial-note{color:rgba(255,255,255,0.28);}
+.trial-note a{color:var(--teal);text-decoration:none;cursor:none;}
+
+/* FAQ */
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:64px;border:1px solid var(--border);}
+.faq-item{border-bottom:1px solid var(--border);border-right:1px solid var(--border);}
+.faq-item:nth-child(2n){border-right:none;}
+.faq-item:nth-last-child(-n+2){border-bottom:none;}
+.faq-q{width:100%;text-align:left;background:none;border:none;padding:24px 28px;font-family:'Playfair Display',serif;font-size:17px;font-weight:400;color:var(--black);cursor:none;display:flex;justify-content:space-between;align-items:center;gap:20px;transition:background 0.2s;line-height:1.4;}
+.faq-q:hover{background:var(--paper);}
+.faq-q.open{background:var(--black);color:var(--white);}
+.faq-chevron{font-size:20px;flex-shrink:0;transition:transform 0.3s;color:var(--mid);font-family:'Raleway',sans-serif;font-weight:300;}
+.faq-q.open .faq-chevron{transform:rotate(45deg);color:rgba(255,255,255,0.3);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.4s ease;}
+.faq-a.open{max-height:300px;}
+.faq-a-inner{padding:0 28px 24px;font-size:14px;color:var(--mid);font-weight:300;line-height:1.8;}
+.faq-a-inner a{color:var(--teal);text-decoration:none;cursor:none;}
+
+/* CTA */
+.cta-section{background:var(--black);color:var(--white);padding:120px 6%;text-align:center;}
+.cta-section .sec-eyebrow{justify-content:center;}
+.cta-section .eyebrow-line{background:rgba(255,255,255,0.2);}
+.cta-section .eyebrow-text{color:rgba(255,255,255,0.4);}
+.cta-title{font-family:'Playfair Display',serif;font-size:clamp(40px,5.5vw,70px);font-weight:400;line-height:1.08;letter-spacing:-1.5px;color:var(--white);max-width:700px;margin:20px auto 32px;}
+.cta-title em{font-style:italic;}
+.cta-sub{font-size:15px;color:rgba(255,255,255,0.45);font-weight:300;max-width:380px;margin:0 auto 52px;line-height:1.75;}
+.cta-form{display:flex;max-width:420px;margin:0 auto;flex-wrap:wrap;justify-content:center;}
+.cta-input{flex:1;min-width:200px;padding:16px 18px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-right:none;color:var(--white);font-size:14px;font-family:'Raleway',sans-serif;outline:none;transition:border 0.2s;}
+.cta-input::placeholder{color:rgba(255,255,255,0.25);}
+.cta-input:focus{border-color:rgba(255,255,255,0.35);}
+.btn-cta{background:var(--white);color:var(--black);padding:16px 26px;font-family:'Raleway',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;border:1px solid var(--white);cursor:none;transition:all 0.25s;white-space:nowrap;}
+.btn-cta:hover{background:var(--teal);border-color:var(--teal);color:white;}
+.cta-note{margin-top:18px;font-size:11px;color:rgba(255,255,255,0.25);}
+.cta-guarantees{display:flex;justify-content:center;gap:40px;margin-top:52px;flex-wrap:wrap;}
+.guarantee{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.g-icon{font-size:20px;opacity:0.5;}
+.g-label{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.3);}
+
+/* FOOTER */
+footer{background:#060608;padding:60px 6% 40px;}
+.foot-inner{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:56px;}
+.foot-brand-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:400;color:var(--white);display:block;margin-bottom:4px;}
+.foot-brand-sub{font-size:8px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.2);display:block;margin-bottom:16px;}
+.foot-desc{font-size:13px;color:rgba(255,255,255,0.3);line-height:1.7;font-weight:300;max-width:240px;}
+.socials{display:flex;gap:10px;margin-top:20px;}
+.soc{width:32px;height:32px;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3);text-decoration:none;font-size:13px;transition:all 0.2s;cursor:none;}
+.soc:hover{border-color:rgba(255,255,255,0.4);color:white;}
+.foot-col h4{font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.2);margin-bottom:20px;}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:12px;}
+.foot-col a{font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;font-weight:300;transition:color 0.2s;cursor:none;}
+.foot-col a:hover{color:var(--white);}
+.foot-bottom{border-top:1px solid rgba(255,255,255,0.06);padding-top:32px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.foot-bottom p{font-size:12px;color:rgba(255,255,255,0.2);font-weight:300;}
+.foot-legal{display:flex;gap:24px;}
+.foot-legal a{font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;font-weight:500;transition:color 0.2s;cursor:none;}
+.foot-legal a:hover{color:white;}
+#btt{position:fixed;bottom:32px;right:32px;width:44px;height:44px;background:var(--black);color:white;border:none;cursor:none;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,0.15);opacity:0;transform:translateY(12px);transition:all 0.3s;z-index:50;}
+#btt.vis{opacity:1;transform:translateY(0);}
+#btt:hover{background:var(--teal);}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.in{opacity:1;transform:none;}
+.d1{transition-delay:0.12s;}
+.d2{transition-delay:0.24s;}
+
+/* RESPONSIVE */
+@media(max-width:1024px){
+  .hero{grid-template-columns:1fr;padding-top:20px;}
+  .hero-right{display:none;}
+  .how-grid,.audio-inner,.preview-inner,.accent-grid,.founder-inner{grid-template-columns:1fr;gap:48px;}
+  .feat-grid{grid-template-columns:1fr 1fr;}
+  .feat:nth-child(3n){border-right:1px solid var(--border);}
+  .feat:nth-child(2n){border-right:none;}
+  .feat:nth-child(5),.feat:nth-child(6){border-bottom:none;}
+  .feat:nth-child(4){border-bottom:1px solid var(--border);}
+  .price-grid{grid-template-columns:1fr;}
+  .plan{border-right:none!important;border-bottom:1px solid var(--border);}
+  .plan:last-child{border-bottom:none;}
+  .testi-grid{grid-template-columns:1fr;}
+  .faq-grid{grid-template-columns:1fr;}
+  .faq-item:nth-child(2n){border-right:none;}
+  .faq-item{border-right:none!important;}
+  .faq-item:nth-last-child(-n+2){border-bottom:1px solid var(--border);}
+  .faq-item:last-child{border-bottom:none;}
+  .foot-inner{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:768px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .ann-bar{font-size:11px;padding-right:44px;text-align:left;}
+  .feat-grid{grid-template-columns:1fr;}
+  .feat:nth-child(n){border-right:none;border-bottom:1px solid var(--border);}
+  .feat:last-child{border-bottom:none;}
+  .foot-inner{grid-template-columns:1fr;}
+  .foot-bottom{flex-direction:column;align-items:flex-start;}
+  .hero-stats{gap:24px;}
+  .cta-form{flex-direction:column;}
+  .cta-input{border-right:1px solid rgba(255,255,255,0.12);}
+  .lm-buttons{flex-direction:column;}
+  .cta-guarantees{gap:20px;}
+}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div id="scrollBar"></div>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="ann-bar" id="annBar">
+  🎉 Early access open — first 200 members get <a href="#pricing">lifetime access at $79</a>. 147 spots remaining.
+  <button class="ann-close" onclick="document.getElementById('annBar').style.display='none'" aria-label="Close">×</button>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg class="nav-mic" viewBox="0 0 44 56" fill="none">
+      <rect x="8" y="2" width="28" height="40" rx="14" stroke="#0A0A0A" stroke-width="2.5"/>
+      <rect x="15" y="10" width="14" height="3.5" rx="1.75" fill="#0A0A0A"/>
+      <rect x="15" y="18" width="14" height="3.5" rx="1.75" fill="#0A0A0A"/>
+      <rect x="15" y="26" width="14" height="3.5" rx="1.75" fill="#0A0A0A"/>
+      <path d="M4 28C4 40 40 40 40 28" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="22" y1="40" x2="22" y2="50" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="14" y1="50" x2="30" y2="50" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+    <div><span class="nav-logo-text">MyElocution</span><span class="nav-logo-sub">Accent Training</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how">Method</a></li>
+    <li><a href="#demo">Listen</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="#" class="nav-cta">Begin Free</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+</nav>
+
+<div class="mobile-nav" id="mobileNav">
+  <a href="#how" onclick="closeMob()">Method</a>
+  <a href="#demo" onclick="closeMob()">Listen</a>
+  <a href="#pricing" onclick="closeMob()">Pricing</a>
+  <a href="#faq" onclick="closeMob()">FAQ</a>
+  <a href="#" onclick="closeMob()">Begin Free →</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">AI-Powered Accent Coaching</span></div>
+    <h1>Speak with<br>absolute<br><em>clarity.</em></h1>
+    <p class="hero-body">Hear yourself. Compare yourself. Change yourself. Real-time AI voice analysis gives you measurable feedback after every session — so you feel the difference immediately.</p>
+    <div class="hero-actions">
+      <a href="#pricing" class="btn-primary">Begin for free →</a>
+      <button class="btn-audio" id="heroAudioBtn" onclick="playHeroDemo()">
+        <span class="audio-icon" id="heroIcon">▶</span>
+        <span id="heroAudioLabel">Hear a before &amp; after</span>
+      </button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><strong>Early</strong><span>Access Open</span></div>
+      <div class="stat"><strong>30</strong><span>Days to Results</span></div>
+      <div class="stat"><strong>15 min</strong><span>Per Session</span></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="mic-frame">
+      <svg class="hero-mic" viewBox="0 0 120 180" fill="none">
+        <rect x="26" y="4" width="68" height="110" rx="34" stroke="#0A0A0A" stroke-width="5"/>
+        <rect x="40" y="24" width="40" height="8" rx="4" fill="#0A0A0A"/>
+        <rect x="40" y="44" width="40" height="8" rx="4" fill="#0A0A0A"/>
+        <rect x="40" y="64" width="40" height="8" rx="4" fill="#0A0A0A"/>
+        <rect x="40" y="84" width="40" height="8" rx="4" fill="#0A0A0A"/>
+        <path d="M10 88C10 128 110 128 110 88" stroke="#0A0A0A" stroke-width="5" stroke-linecap="round"/>
+        <line x1="60" y1="128" x2="60" y2="158" stroke="#0A0A0A" stroke-width="5" stroke-linecap="round"/>
+        <line x1="36" y1="158" x2="84" y2="158" stroke="#0A0A0A" stroke-width="5" stroke-linecap="round"/>
+      </svg>
+      <div class="card-score"><strong>94%</strong><small>Clarity Score</small></div>
+      <div class="card-wave">
+        <p class="wave-label">Session 1 → Session 14</p>
+        <canvas id="waveCanvas" width="170" height="64" style="display:block;width:100%;"></canvas>
+        <div class="wave-score">+18pts <small>this week</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+<div class="logos-bar">
+  <span class="logos-label">Learners from</span>
+  <div class="logos-list">
+    <span>India</span><span>Brazil</span><span>China</span><span>France</span>
+    <span>Russia</span><span>Mexico</span><span>Korea</span><span>Italy</span>
+  </div>
+</div>
+<hr class="divider">
+
+<!-- AUDIO DEMO -->
+<section class="audio-section" id="demo">
+  <div class="audio-inner">
+    <div class="audio-left">
+      <div class="sec-eyebrow reveal"><span class="eyebrow-line"></span><span class="eyebrow-text">Hear the Difference</span></div>
+      <h2 class="sec-title reveal">The same phrase.<br><em>Two different voices.</em></h2>
+      <p class="audio-sub reveal">Press play on each card. The phrase is identical. The difference is three weeks of daily 15-minute sessions — and you can hear it immediately.</p>
+      <p class="audio-note reveal">Uses your browser's built-in speech engine to demonstrate the concept. Your real sessions use ElevenLabs AI with your own microphone and voice.</p>
+    </div>
+    <div class="audio-right reveal d1">
+      <div class="audio-card before-card">
+        <div class="ac-header">
+          <span class="ac-label before">Session 1 — Before</span>
+          <span class="ac-score dim">47%</span>
+        </div>
+        <p class="ac-phrase">"The thirty-three thieves thought that they thrilled the throne."</p>
+        <div class="ac-waveform" id="waveB"></div>
+        <button class="ac-play" id="btnBefore" onclick="speakPhrase('before')">
+          <span class="play-tri">▶</span><span class="stop-sq">■</span>&nbsp; Play Session 1
+        </button>
+      </div>
+      <div class="audio-card after-card">
+        <div class="ac-header">
+          <span class="ac-label after">Session 14 — After</span>
+          <span class="ac-score bright">91%</span>
+        </div>
+        <p class="ac-phrase">"The thirty-three thieves thought that they thrilled the throne."</p>
+        <div class="ac-waveform" id="waveA"></div>
+        <button class="ac-play" id="btnAfter" onclick="speakPhrase('after')">
+          <span class="play-tri">▶</span><span class="stop-sq">■</span>&nbsp; Play Session 14
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="sec-eyebrow reveal"><span class="eyebrow-line"></span><span class="eyebrow-text">The Method</span></div>
+  <div class="how-grid">
+    <div class="reveal">
+      <h2 class="sec-title">Three steps.<br><em>Hear yourself change.</em></h2>
+      <p class="how-body">Each session is 10–15 minutes. You listen, speak, and compare. The before-and-after is immediate — and unmistakable.</p>
+      <a href="#pricing" class="btn-primary">Start your first session</a>
+    </div>
+    <div class="steps reveal d1">
+      <div class="step"><span class="step-num">01</span><div><h3 class="step-title">Listen to the model</h3><p class="step-body">Our AI plays a native reference recording of a phrase. Hear the exact sound, rhythm, and stress pattern you're aiming for — replay as many times as you need.</p></div></div>
+      <div class="step"><span class="step-num">02</span><div><h3 class="step-title">Record yourself</h3><p class="step-body">Say the phrase into your microphone. Your voice is analysed phoneme by phoneme and compared to the model within seconds. No upload delay, no waiting.</p></div></div>
+      <div class="step"><span class="step-num">03</span><div><h3 class="step-title">Hear your score</h3><p class="step-body">Receive a clarity score out of 100, pinpoint notes on what needs work, and a side-by-side playback of your voice vs the reference. Progress is visible immediately.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- LESSON PREVIEW -->
+<section class="preview-section">
+  <div class="sec-eyebrow reveal"><span class="eyebrow-line"></span><span class="eyebrow-text">Inside a Session</span></div>
+  <div class="preview-inner">
+    <div class="preview-copy reveal">
+      <h2 class="sec-title">This is what a<br><em>session looks like.</em></h2>
+      <p>No confusion. No guesswork. Every screen has one job. You always know exactly what you're doing — and the score tells you exactly how it's working.</p>
+      <div class="preview-tags">
+        <span class="ptag">No App Download</span>
+        <span class="ptag">Works in Browser</span>
+        <span class="ptag">Any Microphone</span>
+        <span class="ptag">Instant Feedback</span>
+      </div>
+    </div>
+    <div class="lesson-mockup reveal d1">
+      <div class="lm-bar">
+        <div class="lm-dot" style="background:#FF5F57"></div>
+        <div class="lm-dot" style="background:#FEBC2E"></div>
+        <div class="lm-dot" style="background:#28C840"></div>
+      </div>
+      <div class="lm-body">
+        <p class="lm-phrase-label">Module 2 · Lesson 4 of 8 — TH Sounds</p>
+        <p class="lm-phrase">Repeat: "The <em>thirty</em>-three thieves <em>thought</em>"</p>
+        <div class="lm-buttons">
+          <button class="lm-btn lm-btn-listen">🎧 Listen to Model</button>
+          <button class="lm-btn lm-btn-rec" id="mockRecBtn" onclick="toggleMockRec()">⏺ Record Yourself</button>
+        </div>
+        <div class="lm-feedback">
+          <div class="lm-fb-row">
+            <span class="lm-fb-label">Clarity Score</span>
+            <span class="lm-score-big" id="mockScore">78<span>↑ +6 from last try</span></span>
+          </div>
+          <div class="lm-bar-track"><div class="lm-bar-fill" id="mockFill" style="width:78%"></div></div>
+          <p class="lm-note"><strong>Well done:</strong> Your "th" in "thirty" is now clear. Focus next on "thought" — your tongue is touching your teeth slightly too early, softening the sound.</p>
+        </div>
+        <div class="lm-progress-row">
+          <span class="lm-prog-label">Today's progress</span>
+          <div class="lm-prog-dots">
+            <div class="lm-prog-dot done"></div><div class="lm-prog-dot done"></div>
+            <div class="lm-prog-dot done"></div><div class="lm-prog-dot current"></div>
+            <div class="lm-prog-dot"></div><div class="lm-prog-dot"></div>
+            <div class="lm-prog-dot"></div><div class="lm-prog-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACCENTS -->
+<section class="accents-bg" id="accents">
+  <div class="sec-eyebrow reveal"><span class="eyebrow-line"></span><span class="eyebrow-text">Accent Tracks</span></div>
+  <h2 class="sec-title reveal">Choose the accent<br><em>that opens doors.</em></h2>
+  <div class="accent-grid">
+    <div class="accent-list reveal">
+      <div class="accent-item active"><div class="accent-left"><span class="accent-flag">🇺🇸</span><div><div class="accent-name">General American</div><div class="accent-sub">Neutral, newscaster-standard English</div></div></div><span class="accent-tag">Most Popular</span></div>
+      <div class="accent-item"><div class="accent-left"><span class="accent-flag">🇬🇧</span><div><div class="accent-name">British RP</div><div class="accent-sub">BBC Received Pronunciation</div></div></div><span class="accent-tag">Classic</span></div>
+      <div class="accent-item"><div class="accent-left"><span class="accent-flag">🌍</span><div><div class="accent-name">Global Neutral</div><div class="accent-sub">Universally clear — no regional flavour</div></div></div><span class="accent-tag">New</span></div>
+      <div class="accent-item"><div class="accent-left"><span class="accent-flag">🇦🇺</span><div><div class="accent-name">Australian</div><div class="accent-sub">Warm, professional standard</div></div></div><span class="accent-tag soft">Coming Soon</span></div>
+    </div>
+    <div class="prog-panel reveal d1">
+      <div class="prog-header"><h3>Week 3 progress</h3><span>General American</span></div>
+      <div class="prog-row"><div class="prog-meta"><strong>Vowel Clarity</strong><span>82%</span></div><div class="prog-track"><div class="prog-fill" style="width:82%"></div></div></div>
+      <div class="prog-row"><div class="prog-meta"><strong>Consonant Precision</strong><span>74%</span></div><div class="prog-track"><div class="prog-fill" style="width:74%"></div></div></div>
+      <div class="prog-row"><div class="prog-meta"><strong>Rhythm &amp; Stress</strong><span>91%</span></div><div class="prog-track"><div class="prog-fill" style="width:91%"></div></div></div>
+      <div class="prog-row"><div class="prog-meta"><strong>Overall Accent Match</strong><span>79%</span></div><div class="prog-track"><div class="prog-fill" style="width:79%"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="sec-eyebrow reveal"><span class="eyebrow-line"></span><span class="eyebrow-text">What's Included</span></div>
+  <h2 class="sec-title reveal">Everything you need.<br><em>Nothing you don't.</em></h2>
+  <div class="feat-grid">
+    <div class="feat reveal"><span class="feat-icon">🎙️</span><h3 class="feat-title">AI Voice Analysis</h3><p class="feat-body">Powered by ElevenLabs. Phoneme-level accuracy, rhythm, and stress measured within seconds of every recording.</p></div>
+    <div class="feat reveal d1"><span class="feat-icon">📊</span><h3 class="feat-title">Clarity Score</h3><p class="feat-body">A score out of 100 after every session. Watch it rise week by week. The data makes your progress undeniable and addictive.</p></div>
+    <div class="feat reveal d2"><span class="feat-icon">🔁</span><h3 class="feat-title">Side-by-Side Playback</h3><p class="feat-body">Hear the native model and your recording together. The gap between session 1 and session 14 will genuinely surprise you.</p></div>
+    <div class="feat reveal"><span class="feat-icon">📚</span><h3 class="feat-title">Structured Courses</h3><p class="feat-body">Focused lessons: vowels, consonants, word stress, connected speech. Fifteen minutes a day. Thirty days to transformation.</p></div>
+    <div class="feat reveal d1"><span class="feat-icon">🔒</span><h3 class="feat-title">100% Private</h3><p class="feat-body">Your recordings are analysed and immediately discarded. We never store your voice. Nothing is saved to any server, ever.</p></div>
+    <div class="feat reveal d2"><span class="feat-icon">📱</span><h3 class="feat-title">Any Device</h3><p class="feat-body">Pure browser-based. Phone, tablet, or laptop. Your only requirement is a working microphone — which you already have.</p></div>
+  </div>
+</section>
+
+<!-- FOUNDER NOTE -->
+<section class="founder-section">
+  <div class="founder-inner">
+    <div class="reveal">
+      <div class="founder-avatar">
+        <span class="founder-avatar-letter">A</span>
+        <span class="founder-avatar-badge">Founder</span>
+      </div>
+    </div>
+    <div class="reveal d1">
+      <p class="founder-label">Why I built this</p>
+      <blockquote class="founder-quote">"I moved countries at 24 and spent the next three years watching opportunities pass me by in meetings because people couldn't follow what I was saying. Not because I wasn't capable — because no one could hear it. I built MyElocution because the tools that existed were either patronising, expensive, or just didn't work. This one does."</blockquote>
+      <p class="founder-name"><strong>Alex Mercer</strong>Founder, MyElocution &nbsp;·&nbsp; Previously: English Language Coach, 8 years</p>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-bg">
+  <div class="sec-eyebrow reveal"><span class="eyebrow-line"></span><span class="eyebrow-text">Learner Stories</span></div>
+  <h2 class="sec-title reveal">Real voices.<br><em>Real change.</em></h2>
+  <div class="testi-grid">
+    <div class="testi reveal">
+      <div class="testi-score-bar">
+        <div class="tsb-label"><span>Clarity Score</span><span class="tsb-delta">+29 pts in 14 sessions</span></div>
+        <div class="tsb-track"><div class="tsb-before" style="width:58%"><span>58%</span></div><div class="tsb-after" style="width:87%"><span>87%</span></div></div>
+        <div class="tsb-legend"><span class="dot-before">⬤</span> Start &nbsp;&nbsp; <span class="dot-after">⬤</span> Week 3</div>
+      </div>
+      <span class="q-mark">"</span>
+      <p class="testi-text">My manager commented unprompted on how clearly I spoke. I'd never had that feedback before. It changed how people perceive me professionally — and I can see exactly why in my scores.</p>
+      <div class="testi-author">
+        <svg width="42" height="42" viewBox="0 0 42 42" fill="none"><circle cx="21" cy="21" r="21" fill="url(#g1)"/><text x="21" y="26" text-anchor="middle" font-family="Playfair Display,serif" font-size="16" fill="white">P</text><defs><linearGradient id="g1" x1="0" y1="0" x2="42" y2="42" gradientUnits="userSpaceOnUse"><stop stop-color="#4A90D9"/><stop offset="1" stop-color="#1B2A6B"/></linearGradient></defs></svg>
+        <div><div class="auth-name">Priya S.</div><div class="auth-detail">Software Engineer · Bangalore → London</div></div>
+      </div>
+    </div>
+    <div class="testi reveal d1">
+      <div class="testi-score-bar">
+        <div class="tsb-label"><span>Clarity Score</span><span class="tsb-delta">+36 pts in 21 sessions</span></div>
+        <div class="tsb-track"><div class="tsb-before" style="width:52%"><span>52%</span></div><div class="tsb-after" style="width:88%"><span>88%</span></div></div>
+        <div class="tsb-legend"><span class="dot-before">⬤</span> Start &nbsp;&nbsp; <span class="dot-after">⬤</span> Week 4</div>
+      </div>
+      <span class="q-mark">"</span>
+      <p class="testi-text">I've tried YouTube, apps, private tutors. Nothing gave me the before-and-after moment this does. Watching that number climb from 52 to 88 kept me coming back every single day.</p>
+      <div class="testi-author">
+        <svg width="42" height="42" viewBox="0 0 42 42" fill="none"><circle cx="21" cy="21" r="21" fill="url(#g2)"/><text x="21" y="26" text-anchor="middle" font-family="Playfair Display,serif" font-size="16" fill="white">M</text><defs><linearGradient id="g2" x1="0" y1="0" x2="42" y2="42" gradientUnits="userSpaceOnUse"><stop stop-color="#F5A623"/><stop offset="1" stop-color="#C9A84C"/></linearGradient></defs></svg>
+        <div><div class="auth-name">Marco R.</div><div class="auth-detail">Marketing Director · São Paulo → New York</div></div>
+      </div>
+    </div>
+    <div class="testi reveal d2">
+      <div class="testi-score-bar">
+        <div class="tsb-label"><span>Clarity Score</span><span class="tsb-delta">+33 pts in 18 sessions</span></div>
+        <div class="tsb-track"><div class="tsb-before" style="width:61%"><span>61%</span></div><div class="tsb-after" style="width:94%"><span>94%</span></div></div>
+        <div class="tsb-legend"><span class="dot-before">⬤</span> Start &nbsp;&nbsp; <span class="dot-after">⬤</span> Week 3</div>
+      </div>
+      <span class="q-mark">"</span>
+      <p class="testi-text">Fifteen minutes before every client call. My American colleagues stopped asking me to repeat myself after week two. My score hit 94% by session 18. The data doesn't lie.</p>
+      <div class="testi-author">
+        <svg width="42" height="42" viewBox="0 0 42 42" fill="none"><circle cx="21" cy="21" r="21" fill="url(#g3)"/><text x="21" y="26" text-anchor="middle" font-family="Playfair Display,serif" font-size="16" fill="white">L</text><defs><linearGradient id="g3" x1="0" y1="0" x2="42" y2="42" gradientUnits="userSpaceOnUse"><stop stop-color="#2D8C7E"/><stop offset="1" stop-color="#0D1B4B"/></linearGradient></defs></svg>
+        <div><div class="auth-name">Linh T.</div><div class="auth-detail">Sales Executive · Ho Chi Minh City → Remote</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="sec-eyebrow reveal"><span class="eyebrow-line"></span><span class="eyebrow-text">Pricing</span></div>
+  <h2 class="sec-title reveal">Simple, honest<br><em>pricing.</em></h2>
+  <div class="price-toggle reveal">
+    <button class="toggle-btn" id="btnM" onclick="setM()">Monthly</button>
+    <button class="toggle-btn on" id="btnA" onclick="setA()">Annual</button>
+    <span class="save-note">— Save 40% annually</span>
+  </div>
+  <div class="price-grid">
+    <div class="plan reveal">
+      <p class="plan-name">Free</p>
+      <p class="plan-desc">Try a real session before you commit. No card required — ever.</p>
+      <div class="plan-price"><span class="p-sym">$</span><span class="p-num">0</span><span class="p-per">/ forever</span></div>
+      <ul class="plan-feats">
+        <li>3 complete sessions per month</li>
+        <li>AI clarity score each session</li>
+        <li>1 accent track (General American)</li>
+        <li>Basic progress chart</li>
+      </ul>
+      <a href="#" class="btn-plan btn-outline">Get started — no card</a>
+      <p class="trial-note">Free forever. No expiry. No card. No catch.</p>
+    </div>
+    <div class="plan featured reveal d1">
+      <span class="plan-badge">Most Popular</span>
+      <p class="plan-name" style="color:#fff">Pro</p>
+      <p class="plan-desc">Unlimited sessions. All accents. The complete feedback loop.</p>
+      <div class="plan-price"><span class="p-sym" style="color:#fff">$</span><span class="p-num" style="color:#fff" id="proP">9</span><span class="p-per">/month</span></div>
+      <ul class="plan-feats">
+        <li>Unlimited daily sessions</li>
+        <li>All 3 accent tracks</li>
+        <li>Full AI feedback report</li>
+        <li>Side-by-side playback</li>
+        <li>Weekly progress insights</li>
+        <li>Completion certificates</li>
+      </ul>
+      <a href="#" class="btn-plan btn-white">Start 7-day free trial</a>
+      <p class="trial-note">Free for 7 days. Card required. Cancel before day 7 and you won't be charged — <a href="#">we mean that</a>.</p>
+    </div>
+    <div class="plan reveal d2">
+      <p class="plan-name">Lifetime</p>
+      <p class="plan-desc">Pay once. Access everything, forever. Built for serious learners.</p>
+      <div class="plan-price"><span class="p-sym">$</span><span class="p-num" id="lifeP">79</span><span class="p-per">one-time</span></div>
+      <ul class="plan-feats">
+        <li>Everything in Pro</li>
+        <li>Lifetime access</li>
+        <li>All future accent tracks</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="#" class="btn-plan btn-outline">Buy lifetime access</a>
+      <p class="trial-note">Early access price — rises to $149 after 200 members.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="sec-eyebrow reveal"><span class="eyebrow-line"></span><span class="eyebrow-text">Questions</span></div>
+  <h2 class="sec-title reveal">Everything you<br><em>need to know.</em></h2>
+  <div class="faq-grid reveal">
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Will this work for my accent?<span class="faq-chevron">+</span></button><div class="faq-a"><div class="faq-a-inner">MyElocution is designed to work from any native accent — Indian, Brazilian, Eastern European, East Asian, and more. The AI analyses your specific phoneme patterns and targets the exact areas where your accent diverges from your chosen target. The only requirement is a working microphone and a browser.</div></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Do I need special equipment?<span class="faq-chevron">+</span></button><div class="faq-a"><div class="faq-a-inner">No. Any microphone works — your laptop's built-in mic, your phone, earbuds, or a dedicated headset. You don't need studio quality. The AI is trained to work with real-world microphone conditions. A quiet room helps but isn't required.</div></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How long until I see real results?<span class="faq-chevron">+</span></button><div class="faq-a"><div class="faq-a-inner">Most learners see a measurable improvement in their clarity score within the first 3–5 sessions. Colleagues and listeners typically notice a difference within 2–3 weeks of daily practice. The 30-day result is based on one 15-minute session per day, consistently. Results vary by starting point and frequency.</div></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Is my voice data stored or shared?<span class="faq-chevron">+</span></button><div class="faq-a"><div class="faq-a-inner">No. Your voice recordings are passed to the AI for real-time analysis and then immediately discarded. Nothing is written to a database. Nothing is stored on our servers. Your voice is never used for AI training purposes. This is a core architectural principle — <a href="#">read our privacy policy</a> for full technical detail.</div></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What's the difference between this and YouTube?<span class="faq-chevron">+</span></button><div class="faq-a"><div class="faq-a-inner">YouTube can show you what a neutral accent sounds like. It cannot tell you whether your attempt sounds like it. The feedback loop is the entire product. Knowing you said something wrong is useful. Knowing exactly which phoneme was wrong, and hearing a comparison next to the model, is transformative.</div></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Can I cancel anytime?<span class="faq-chevron">+</span></button><div class="faq-a"><div class="faq-a-inner">Yes, with zero friction. Cancel from your account settings in under 10 seconds. No "please tell us why" screens. No retention flows. No emails. If you cancel before your billing date, you keep access until the end of the paid period. Lifetime access is exactly that — one payment, no recurring charge.</div></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What if I don't improve?<span class="faq-chevron">+</span></button><div class="faq-a"><div class="faq-a-inner">If you complete 30 consecutive days of sessions and your clarity score hasn't improved, contact us and we'll issue a full refund. No questions. We're confident enough in the product to stand behind that. The only scenario where people don't improve is if they stop showing up — which the score system is specifically designed to prevent.</div></div></div>
+
+    <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Does it work on mobile?<span class="faq-chevron">+</span></button><div class="faq-a"><div class="faq-a-inner">Yes. Fully browser-based and tested on iOS Safari, Android Chrome, and all major mobile browsers. The session interface is designed for one-handed use on a phone. Many learners complete their daily session on their commute.</div></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="sec-eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">Begin Today</span></div>
+  <h2 class="cta-title">Your clearest voice<br>is <em>already in there.</em></h2>
+  <p class="cta-sub">Three sessions free. No card. No account required to start. Just speak — and hear the difference.</p>
+  <div class="cta-form">
+    <input type="email" class="cta-input" placeholder="your@email.com">
+    <button class="btn-cta">Begin Free</button>
+  </div>
+  <p class="cta-note">3 free sessions · No credit card · Cancel anytime</p>
+  <div class="cta-guarantees">
+    <div class="guarantee"><span class="g-icon">🔒</span><span class="g-label">Voice data never stored</span></div>
+    <div class="guarantee"><span class="g-icon">↩</span><span class="g-label">30-day money back</span></div>
+    <div class="guarantee"><span class="g-icon">✕</span><span class="g-label">Cancel in 10 seconds</span></div>
+    <div class="guarantee"><span class="g-icon">📱</span><span class="g-label">Works on any device</span></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-inner">
+    <div>
+      <span class="foot-brand-name">MyElocution</span>
+      <span class="foot-brand-sub">AI Accent Training</span>
+      <p class="foot-desc">Speak clearly. Be heard. Open every door. AI-powered accent coaching for professionals everywhere.</p>
+      <div class="socials">
+        <a href="#" class="soc" aria-label="Twitter">𝕏</a>
+        <a href="#" class="soc" aria-label="Instagram">ig</a>
+        <a href="#" class="soc" aria-label="LinkedIn">in</a>
+        <a href="#" class="soc" aria-label="YouTube">▶</a>
+      </div>
+    </div>
+    <div class="foot-col"><h4>Product</h4><ul><li><a href="#">The Method</a></li><li><a href="#">Accent Tracks</a></li><li><a href="#">Pricing</a></li><li><a href="#">Blog</a></li></ul></div>
+    <div class="foot-col"><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Careers</a></li><li><a href="#">Press</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div class="foot-col"><h4>Legal</h4><ul><li><a href="#">Help Centre</a></li><li><a href="https://terms.myelocution.com">Terms of Service</a></li><li><a href="https://privacy.myelocution.com">Privacy Policy</a></li><li><a href="#">Cookie Policy</a></li></ul></div>
+  </div>
+  <div class="foot-bottom">
+    <p>© 2026 MyElocution. All rights reserved.</p>
+    <div class="foot-legal">
+      <a href="https://terms.myelocution.com">Terms of Service</a>
+      <a href="https://privacy.myelocution.com">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<button id="btt" aria-label="Back to top" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// CURSOR
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function a(){rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+
+// SCROLL
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  document.getElementById('scrollBar').style.width=((h.scrollTop/(h.scrollHeight-h.clientHeight))*100)+'%';
+  document.getElementById('btt').classList.toggle('vis',scrollY>500);
+});
+
+// NAV
+document.getElementById('hamburger').addEventListener('click',function(){this.classList.toggle('open');document.getElementById('mobileNav').classList.toggle('open');});
+function closeMob(){document.getElementById('hamburger').classList.remove('open');document.getElementById('mobileNav').classList.remove('open');}
+
+// CANVAS WAVEFORM
+(function(){
+  const c=document.getElementById('waveCanvas');if(!c)return;
+  const ctx=c.getContext('2d'),W=c.width,H=c.height,mid=H/2;
+  function sr(seed){let s=seed;return()=>{s=(s*9301+49297)%233280;return s/233280;};}
+  const r1=sr(42),bef=[];for(let i=0;i<50;i++){const a=r1()*0.9+0.1,sp=r1()>0.7?r1()*1.8:1;bef.push(Math.min(1,a*sp));}
+  const r2=sr(99),aft=[];for(let i=0;i<50;i++){const b=Math.sin(i*0.22)*0.28+0.52,n=(r2()-0.5)*0.1;aft.push(Math.max(0.1,Math.min(1,b+n)));}
+  function drawBars(data,yOff,col){
+    const bw=(W-data.length*1.5)/data.length;
+    data.forEach((v,i)=>{
+      const h=v*(H/2-3),x=i*(bw+1.5);
+      ctx.fillStyle=col;ctx.beginPath();
+      try{ctx.roundRect(x,yOff-h,bw,h,1);}catch(e){ctx.rect(x,yOff-h,bw,h);}
+      ctx.fill();ctx.globalAlpha=0.2;ctx.beginPath();
+      try{ctx.roundRect(x,yOff,bw,h*0.35,1);}catch(e){ctx.rect(x,yOff,bw,h*0.35);}
+      ctx.fill();ctx.globalAlpha=1;
+    });
+  }
+  ctx.clearRect(0,0,W,H);
+  drawBars(bef,mid-3,'rgba(10,10,10,0.22)');
+  drawBars(aft,mid+3,'#2D8C7E');
+})();
+
+// DEMO WAVEFORM BARS
+function buildWaveBars(elId,count,seed){
+  const el=document.getElementById(elId);if(!el)return;
+  let s=seed;function rand(){s=(s*9301+49297)%233280;return s/233280;}
+  el.innerHTML='';
+  for(let i=0;i<count;i++){
+    const h=Math.max(15,rand()*100);
+    const b=document.createElement('div');b.className='ac-bar';b.style.height=h+'%';b.style.flex='1';el.appendChild(b);
+  }
+}
+buildWaveBars('waveB',40,17);buildWaveBars('waveA',40,88);
+
+// SPEECH SYNTHESIS
+let currentUtter=null,animFrame=null;
+const phrase='The thirty-three thieves thought that they thrilled the throne.';
+
+function stopAll(){
+  if(window.speechSynthesis)window.speechSynthesis.cancel();
+  if(animFrame){cancelAnimationFrame(animFrame);animFrame=null;}
+  ['btnBefore','btnAfter'].forEach(id=>{const b=document.getElementById(id);if(b)b.classList.remove('speaking');});
+  ['waveB','waveA'].forEach(id=>{const el=document.getElementById(id);if(el)el.querySelectorAll('.ac-bar').forEach(b=>b.classList.remove('active'));});
+  const hb=document.getElementById('heroAudioBtn');if(hb)hb.classList.remove('playing');
+  const hi=document.getElementById('heroIcon');if(hi)hi.textContent='▶';
+  const hl=document.getElementById('heroAudioLabel');if(hl)hl.textContent='Hear a before & after';
+  currentUtter=null;
+}
+
+function speakPhrase(which){
+  if(!window.speechSynthesis){alert('Speech synthesis not supported. Try Chrome or Edge.');return;}
+  stopAll();
+  const btn=document.getElementById(which==='before'?'btnBefore':'btnAfter');
+  const waveEl=document.getElementById(which==='before'?'waveB':'waveA');
+  const bars=waveEl.querySelectorAll('.ac-bar');
+  const u=new SpeechSynthesisUtterance(phrase);
+  u.lang='en-US';
+  u.rate=which==='before'?1.35:0.88;
+  u.pitch=which==='before'?1.3:0.95;
+  function anim(){bars.forEach(b=>{b.classList.toggle('active',Math.random()>0.45);});animFrame=requestAnimationFrame(anim);}
+  u.onstart=()=>{btn.classList.add('speaking');anim();currentUtter=u;};
+  u.onend=u.onerror=()=>{btn.classList.remove('speaking');if(animFrame){cancelAnimationFrame(animFrame);animFrame=null;}bars.forEach(b=>b.classList.remove('active'));currentUtter=null;};
+  window.speechSynthesis.speak(u);
+}
+
+function playHeroDemo(){
+  if(!window.speechSynthesis){alert('Speech synthesis not supported. Try Chrome or Edge.');return;}
+  if(currentUtter){stopAll();return;}
+  const btn=document.getElementById('heroAudioBtn');
+  btn.classList.add('playing');document.getElementById('heroIcon').textContent='■';document.getElementById('heroAudioLabel').textContent='Playing…';
+  const u1=new SpeechSynthesisUtterance('Before. '+phrase);u1.rate=1.35;u1.pitch=1.3;u1.lang='en-US';
+  const u2=new SpeechSynthesisUtterance('After. '+phrase);u2.rate=0.88;u2.pitch=0.95;u2.lang='en-US';
+  u2.onend=()=>{btn.classList.remove('playing');document.getElementById('heroIcon').textContent='▶';document.getElementById('heroAudioLabel').textContent='Hear a before & after';currentUtter=null;};
+  currentUtter=u1;
+  window.speechSynthesis.speak(u1);window.speechSynthesis.speak(u2);
+}
+
+// MOCK LESSON
+let mockRec=false,mockTimer=null;
+function toggleMockRec(){
+  const btn=document.getElementById('mockRecBtn');
+  if(!mockRec){
+    mockRec=true;btn.classList.add('recording');btn.textContent='⏹ Stop Recording';
+    mockTimer=setTimeout(()=>{
+      mockRec=false;btn.classList.remove('recording');btn.textContent='⏺ Record Yourself';
+      document.getElementById('mockFill').style.width='84%';
+      document.getElementById('mockScore').innerHTML='84<span>↑ +6 from last try</span>';
+    },2200);
+  } else {
+    mockRec=false;clearTimeout(mockTimer);btn.classList.remove('recording');btn.textContent='⏺ Record Yourself';
+  }
+}
+
+// PRICING
+function setA(){document.getElementById('proP').textContent='9';document.getElementById('lifeP').textContent='79';document.getElementById('btnA').classList.add('on');document.getElementById('btnM').classList.remove('on');}
+function setM(){document.getElementById('proP').textContent='15';document.getElementById('lifeP').textContent='99';document.getElementById('btnM').classList.add('on');document.getElementById('btnA').classList.remove('on');}
+
+// FAQ
+function toggleFaq(btn){
+  const ans=btn.nextElementSibling,isOpen=btn.classList.contains('open');
+  document.querySelectorAll('.faq-q.open').forEach(q=>{q.classList.remove('open');q.nextElementSibling.classList.remove('open');});
+  if(!isOpen){btn.classList.add('open');ans.classList.add('open');}
+}
+
+// REVEAL
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');});},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// ACCENTS
+document.querySelectorAll('.accent-item').forEach(el=>{el.addEventListener('click',()=>{document.querySelectorAll('.accent-item').forEach(a=>a.classList.remove('active'));el.classList.add('active');});});
+</script>
+</body>
+</html>
